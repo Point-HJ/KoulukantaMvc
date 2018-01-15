@@ -31,8 +31,7 @@
 
                     // etsitään henkilön tiedot klikatulta riviltä
                     var henkiloId = $(this).parent().parent().next().text();
-                    //alert(henkiloId);
-
+                    
                     // haetaan asiakkaan tiedot id:n perusteella
                     $.getJSON("/henkilot/getsinglehenkilo/" + henkiloId, null, function (json2) {
                         var henkilot = JSON.parse(json2);
@@ -84,6 +83,7 @@
                 $("#henkilotModal_Osoite").val("");
                 $("#henkilotModal_Esimies").val("");
 
+                // näytetään ikkuna
                 $("#henkilotModalTitle").text("Lisää uusi henkilö");
                 $("#henkilotModalDialog").modal("show");
             });
@@ -161,7 +161,6 @@
                     <div class="col-md-3">Esimies</div>
                     <div class="col-md-6"><input class="form-control" id="henkilotModal_Esimies" type="text"></div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Sulje</button>

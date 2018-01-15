@@ -2,7 +2,9 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -18,33 +20,37 @@ namespace KoulukantaMvc.Controllers
         public JsonResult GetList()
         {
             KoulukantaEntities entities = new KoulukantaEntities();
+                    
+                var model = (from t in entities.TUNNIT
+                             select new
+                             {
+                                 TuntiID = t.TuntiID,
+                                 ProjektiID = t.ProjektiID,
+                                 HenkiloID = t.HenkiloID,
+                                 Pvm = t.Pvm,
+                                 Tunnit1 = t.Tunnit1
+                             }).ToList();
 
-            var model = (from t in entities.TUNNIT
-                         select new
-                         {
-                             TuntiID = t.TuntiID,
-                             ProjektiID = t.ProjektiID,
-                             HenkiloID = t.HenkiloID,
-                             Pvm = t.Pvm,
-                             Tunnit1 = t.Tunnit1
-                         }).ToList();
+                string json = JsonConvert.SerializeObject(model);
+                entities.Dispose();
 
+                Response.Expires = -1;
+                Response.CacheControl = "no-cache";
 
-            string json = JsonConvert.SerializeObject(model);
-            entities.Dispose();
+                return Json(json, JsonRequestBehavior.AllowGet);
 
-            Response.Expires = -1;
-            Response.CacheControl = "no-cache";
+            }
 
-            return Json(json, JsonRequestBehavior.AllowGet);
-        }
+            
 
         public JsonResult GetSingleTunnit(int id)
         {
             KoulukantaEntities entities = new KoulukantaEntities();
+           // int iid = int.Parse(id);
+            CultureInfo fiFI = new CultureInfo("fi-FI");
 
             var model = (from t in entities.TUNNIT
-                         where t.HenkiloID == id
+                         where t.TuntiID == id
                          select new
                          {
                              TuntiID = t.TuntiID,
@@ -62,7 +68,7 @@ namespace KoulukantaMvc.Controllers
         }
 
 
-        public ActionResult update(TUNNIT tunn)
+        public ActionResult Update(TUNNIT tunn)
         {
 
             KoulukantaEntities entities = new KoulukantaEntities();
@@ -115,7 +121,7 @@ namespace KoulukantaMvc.Controllers
             return Json(OK, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult delete(int id)
+        public ActionResult Delete(int id)
         {
             KoulukantaEntities entities = new KoulukantaEntities();
             // etsitään id:n perusteella asiakasrivi kannasta

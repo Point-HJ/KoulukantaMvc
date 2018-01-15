@@ -28,7 +28,7 @@
 
                 // tietojen muokkaus
                 $(".glyphicon-pencil").click(function () {
-
+                    console.log("Klikattu kynää");
                     // etsitään henkilön tiedot klikatulta riviltä
                     var tuntiID = $(this).parent().parent().next().text();
                     alert(tuntiID);
@@ -38,9 +38,9 @@
                         var tunnit = JSON.parse(json2);
 
                         // kopioidaan tiedot ikkunaan
-                        $("#tunnitModal_TuntiID").val(tunnit.TuntiID);
-                        $("#tunnitModal_ProjektiID").val(tunnit.ProjektiID);
-                        $("#tunnitModal_HenkiloID").val(tunnit.HenkiloID);
+                        $("#tunnitModal_TuntiId").val(tunnit.TuntiID);
+                        $("#tunnitModal_ProjektiId").val(tunnit.ProjektiID);
+                        $("#tunnitModal_HenkiloId").val(tunnit.HenkiloID);
                         $("#tunnitModal_Pvm").val(tunnit.Pvm);
                         $("#tunnitModal_Tunnit1").val(tunnit.Tunnit1);
 
@@ -55,7 +55,7 @@
                     // etsitään asiakkaan tiedot klikatulta riviltä
                     console.log("Poistoa klikattu");
                     var TuntiID = $(this).parent().parent().prev().prev().prev().prev().prev().text();
-                    var ok = confirm("Haluatko varmasti poistaa tunnit " + TuntiID + "?");
+                    var ok = confirm("Haluatko varmasti poistaa tunnit " + TuntiID +"?");
 
                     if (ok == true) {
                         $.getJSON("/tunnit/delete/" + TuntiID, null, function (status) {
@@ -78,9 +78,9 @@
             $("#addUusiTunnitButton").click(function () {
 
                 // tyhjennetään ikkunan tiedot
-                $("#tunnitModal_TuntiID").val("(Uusi)");
-                $("#tunnitModal_ProjektiID").val("");
-                $("#tunnitModal_HenkiloID").val("");
+                $("#tunnitModal_TuntiId").val("(Uusi)");
+                $("#tunnitModal_ProjektiId").val("");
+                $("#tunnitModal_HenkiloId").val("");
                 $("#tunnitModal_Pvm").val("");
                 $("#tunnitModal_Tunnit1").val("");
 
@@ -89,12 +89,14 @@
                 $("#tunnitModalDialog").modal("show");
             });
 
-            $("#tunnitModalSaveButton").click(function () {
+            $("#tunnitModalSaveButton").click (function () {
+                console.log("Tallennusta painettu");
+                                
                 // luetaan käyttäjän syöttämät kentät
                 var details = {
-                    TuntiID: $("#tunnitModal_TuntiID").val(),
-                    ProjektiID: $("#tunnitModal_ProjektiID").val(),
-                    HenkiloID: $("#tunnitModal_HenkiloID").val(),
+                    TuntiID: $("#tunnitModal_TuntiId").val(),
+                    ProjektiID: $("#tunnitModal_ProjektiId").val(),
+                    HenkiloID: $("#tunnitModal_HenkiloId").val(),
                     Pvm: $("#tunnitModal_Pvm").val(),
                     Tunnit: $("#tunnitModal_Tunnit1").val()
                 };
@@ -144,15 +146,15 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-3">Tunti-ID</div>
-                    <div class="col-md-6"><input class="form-control" id="tunnitModal_TuntiID" type="text" readonly></div>
+                    <div class="col-md-6"><input class="form-control" id="tunnitModal_TuntiId" type="text" readonly></div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">Projekti-ID</div>
-                    <div class="col-md-6"><input class="form-control" id="tunnitModal_ProjektiID" type="text"></div>
+                    <div class="col-md-6"><input class="form-control" id="tunnitModal_ProjektiId" type="text"></div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">Henkilö-ID</div>
-                    <div class="col-md-6"><input class="form-control" id="tunnitModal_HenkiloID" type="text"></div>
+                    <div class="col-md-6"><input class="form-control" id="tunnitModal_HenkiloId" type="text"></div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">Päivämäärä</div>
@@ -162,12 +164,11 @@
                     <div class="col-md-3">Tunnit</div>
                     <div class="col-md-6"><input class="form-control" id="tunnitModal_Tunnit1" type="text"></div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Sulje</button>
                 <button type="button" class="btn btn-primary" id="tunnitModalSaveButton">Tallenna</button>
             </div>
-        </div><
+        </div>
     </div>
 </div>

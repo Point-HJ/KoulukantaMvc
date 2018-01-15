@@ -13,9 +13,10 @@
                 var html = "";
                 for (var index = 0; index < projektit.length; index++) {
                     html += "<tr>" +
-                        "<td><a href='#'><span class='glyphicon glyphicon-pencil'></span></a></td>" +
+                        "<td><a href='#'><span class='glyphicon glyphicon-plus-sign'></span></a></td > " +
                         "<td>" + projektit[index].ProjektiID + "</td>" +
                         "<td>" + projektit[index].Nimi + "</td>" +
+                        "<td><a href='#'><span class='glyphicon glyphicon-pencil'></span></a></td>" +
                         "<td><a href='#'><span class='glyphicon glyphicon-trash'></span></a></td>" +
                         "</tr>\r\n";
                 }
@@ -26,8 +27,8 @@
                 $(".glyphicon-pencil").click(function () {
 
                     // etsitään henkilön tiedot klikatulta riviltä
-                    var projektiID = $(this).parent().parent().next().text();
-                    alert(projektiID);
+                    var projektiID = $(this).parent().parent().prev().prev().text();
+                    
 
                     // haetaan asiakkaan tiedot id:n perusteella
                     $.getJSON("/projektit/getsingleprojektit/" + projektiID, null, function (json2) {
@@ -43,11 +44,17 @@
                     });
                 });
 
+                $(".glyphicon-plus-sign").click(function () {
+                    var customerId = $(this).parent().parent().next().text();
+                    alert("Klikattiin: " + customerId);
+                })
+
+
                 // tietojen poisto
                 $(".glyphicon-trash").click(function () {
                     // etsitään asiakkaan tiedot klikatulta riviltä
                     console.log("Poistoa klikattu");
-                    var projektiID = $(this).parent().parent().prev().prev().text();
+                    var projektiID = $(this).parent().parent().prev().prev().prev().text();
                     var ok = confirm("Haluatko varmasti poistaa projektin " + projektiID + "?");
 
                     if (ok == true) {
@@ -98,8 +105,14 @@
                 });
             });
 
+
             console.log("Alustus valmis!");
         });
+
+       
+           
+       
+           
     </script>
 
 }
@@ -127,9 +140,9 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-3">Projekti-ID</div>
-                    <div class="col-md-6"><input class="form-control" id="projektitModal_ProjektiID" type="text"></div>
-                </div>
+                <div class="col-md-3">Projekti-ID</div>
+                <div class="col-md-6"><input class="form-control" id="projektitModal_ProjektiID" type="text"></div>
+               </div>
                 <div class="col-md-3">Nimi</div>
                 <div class="col-md-6"><input class="form-control" id="projektitModal_Nimi" type="text"></div>
             </div>

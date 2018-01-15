@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -18,23 +19,27 @@ namespace KoulukantaMvc.Controllers
         public JsonResult GetList()
         {
             KoulukantaEntities entities = new KoulukantaEntities();
+           
+                var model = (from p in entities.PROJEKTIT
+                             select new
+                             {
+                                 ProjektiID = p.ProjektiID,
+                                 Nimi = p.Nimi,
+                             }).ToList();
 
-            var model = (from p in entities.PROJEKTIT
-                         select new
-                         {
-                             ProjektiID = p.ProjektiID,
-                             Nimi = p.Nimi,
-                         }).ToList();
-
-
-            string json = JsonConvert.SerializeObject(model);
-            entities.Dispose();
+                string json = JsonConvert.SerializeObject(model);
+                 entities.Dispose();
 
             Response.Expires = -1;
-            Response.CacheControl = "no-cache";
+                Response.CacheControl = "no-cache";
 
-            return Json(json, JsonRequestBehavior.AllowGet);
-        }
+                return Json(json, JsonRequestBehavior.AllowGet);
+            
+            }
+        
+
+
+
 
         public JsonResult GetSingleProjektit(int id)
         {
@@ -106,7 +111,7 @@ namespace KoulukantaMvc.Controllers
             return Json(OK, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult delete(int id)
+        public ActionResult Delete(int id)
         {
             KoulukantaEntities entities = new KoulukantaEntities();
             // etsitään id:n perusteella asiakasrivi kannasta
