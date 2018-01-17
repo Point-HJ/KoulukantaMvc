@@ -198,8 +198,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Models\KoulukantaModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>KoulukantaModel.Context.cs</LastGenOutput>
       <DependentUpon>KoulukantaModel.edmx</DependentUpon>
+      <LastGenOutput>KoulukantaModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\KoulukantaModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

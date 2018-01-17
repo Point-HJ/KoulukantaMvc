@@ -18,6 +18,9 @@ namespace KoulukantaMvc.Models
         public Nullable<int> ProjektiID { get; set; }
         public Nullable<int> HenkiloID { get; set; }
         public Nullable<System.DateTime> Pvm { get; set; }
-        public Nullable<decimal> Tunnit1 { get; set; }
+        public Nullable<decimal> Projektitunnit { get; set; }
+    
+        public virtual HENKILOT HENKILOT { get; set; }
+        public virtual PROJEKTIT PROJEKTIT { get; set; }
     }
 }

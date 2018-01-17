@@ -111,6 +111,35 @@ namespace KoulukantaMvc.Controllers
             return Json(OK, JsonRequestBehavior.AllowGet);
         }
 
+
+        public ActionResult GetOrderData(int id)
+        {
+            KoulukantaEntities entities = new KoulukantaEntities();
+
+            List<PROJEKTIT> projektit = (from p in entities.PROJEKTIT
+                                         where p.ProjektiID == id
+                                         orderby p.Nimi descending
+                                         select p).ToList();
+
+            StringBuilder html = new StringBuilder();
+            html.AppendLine("<td colspan=\"5\">" +
+              "<table class=\"table table-striped\">");
+
+            foreach (PROJEKTIT pro in projektit)
+            {
+                html.AppendLine("<tr><td>" +
+                    pro.ProjektiID + "</td>" +
+                    "<td>" + pro.Nimi + "</td></tr>");
+            }
+
+            html.AppendLine("</table></td>");
+
+            var jsonData = new { html = html.ToString() };
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+
+        }
+
+
         public ActionResult Delete(int id)
         {
             KoulukantaEntities entities = new KoulukantaEntities();

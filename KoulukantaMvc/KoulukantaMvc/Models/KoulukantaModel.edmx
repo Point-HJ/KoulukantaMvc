@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="KoulukantaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="KoulukantaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="HENKILOT">
           <Key>
             <PropertyRef Name="HenkiloID" />
@@ -68,8 +68,32 @@ warning 6002: The table/view 'Koulukanta.dbo.POSTITOIMIPAIKKA' does not have a p
           <Property Name="ProjektiID" Type="int" />
           <Property Name="HenkiloID" Type="int" />
           <Property Name="Pvm" Type="datetime" />
-          <Property Name="Tunnit" Type="numeric" Precision="15" Scale="7" />
+          <Property Name="Projektitunnit" Type="numeric" Precision="15" Scale="7" />
         </EntityType>
+        <Association Name="FK_Tunnit_Henkilot">
+          <End Role="HENKILOT" Type="Self.HENKILOT" Multiplicity="0..1" />
+          <End Role="TUNNIT" Type="Self.TUNNIT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HENKILOT">
+              <PropertyRef Name="HenkiloID" />
+            </Principal>
+            <Dependent Role="TUNNIT">
+              <PropertyRef Name="HenkiloID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tunnit_Projektit">
+          <End Role="PROJEKTIT" Type="Self.PROJEKTIT" Multiplicity="0..1" />
+          <End Role="TUNNIT" Type="Self.TUNNIT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROJEKTIT">
+              <PropertyRef Name="ProjektiID" />
+            </Principal>
+            <Dependent Role="TUNNIT">
+              <PropertyRef Name="ProjektiID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="KoulukantaModelStoreContainer">
           <EntitySet Name="HENKILOT" EntityType="Self.HENKILOT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PROJEKTIT" EntityType="Self.PROJEKTIT" Schema="dbo" store:Type="Tables" />
@@ -93,12 +117,34 @@ warning 6002: The table/view 'Koulukanta.dbo.POSTITOIMIPAIKKA' does not have a p
     [POSTITOIMIPAIKKA].[ID] AS [ID]
     FROM [dbo].[POSTITOIMIPAIKKA] AS [POSTITOIMIPAIKKA]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_Tunnit_Henkilot" Association="Self.FK_Tunnit_Henkilot">
+            <End Role="HENKILOT" EntitySet="HENKILOT" />
+            <End Role="TUNNIT" EntitySet="TUNNIT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tunnit_Projektit" Association="Self.FK_Tunnit_Projektit">
+            <End Role="PROJEKTIT" EntitySet="PROJEKTIT" />
+            <End Role="TUNNIT" EntitySet="TUNNIT" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="KoulukantaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="KoulukantaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="HENKILOT" EntityType="KoulukantaModel.HENKILOT" />
+          <EntitySet Name="PROJEKTIT" EntityType="KoulukantaModel.PROJEKTIT" />
+          <EntitySet Name="TUNNIT" EntityType="KoulukantaModel.TUNNIT" />
+          <AssociationSet Name="FK_Tunnit_Henkilot" Association="KoulukantaModel.FK_Tunnit_Henkilot">
+            <End Role="HENKILOT" EntitySet="HENKILOT" />
+            <End Role="TUNNIT" EntitySet="TUNNIT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tunnit_Projektit" Association="KoulukantaModel.FK_Tunnit_Projektit">
+            <End Role="PROJEKTIT" EntitySet="PROJEKTIT" />
+            <End Role="TUNNIT" EntitySet="TUNNIT" />
+          </AssociationSet>
+          <EntitySet Name="Henkilot_bak" EntityType="KoulukantaModel.Henkilot_bak" />
+          <EntitySet Name="POSTITOIMIPAIKKA" EntityType="KoulukantaModel.POSTITOIMIPAIKKA" />
+        </EntityContainer>
         <EntityType Name="HENKILOT">
           <Key>
             <PropertyRef Name="HenkiloID" />
@@ -111,6 +157,7 @@ warning 6002: The table/view 'Koulukanta.dbo.POSTITOIMIPAIKKA' does not have a p
           <Property Name="Puhelin" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="HenkiloID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Esimies" Type="Int32" />
+          <NavigationProperty Name="TUNNIT" Relationship="KoulukantaModel.FK_Tunnit_Henkilot" FromRole="HENKILOT" ToRole="TUNNIT" />
         </EntityType>
         <EntityType Name="PROJEKTIT">
           <Key>
@@ -118,6 +165,7 @@ warning 6002: The table/view 'Koulukanta.dbo.POSTITOIMIPAIKKA' does not have a p
           </Key>
           <Property Name="ProjektiID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nimi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TUNNIT" Relationship="KoulukantaModel.FK_Tunnit_Projektit" FromRole="PROJEKTIT" ToRole="TUNNIT" />
         </EntityType>
         <EntityType Name="TUNNIT">
           <Key>
@@ -127,8 +175,34 @@ warning 6002: The table/view 'Koulukanta.dbo.POSTITOIMIPAIKKA' does not have a p
           <Property Name="ProjektiID" Type="Int32" />
           <Property Name="HenkiloID" Type="Int32" />
           <Property Name="Pvm" Type="DateTime" Precision="3" />
-          <Property Name="Tunnit1" Type="Decimal" Precision="15" Scale="7" />
+          <NavigationProperty Name="HENKILOT" Relationship="KoulukantaModel.FK_Tunnit_Henkilot" FromRole="TUNNIT" ToRole="HENKILOT" />
+          <NavigationProperty Name="PROJEKTIT" Relationship="KoulukantaModel.FK_Tunnit_Projektit" FromRole="TUNNIT" ToRole="PROJEKTIT" />
+          <Property Name="Projektitunnit" Type="Decimal" Precision="15" Scale="7" />
         </EntityType>
+        <Association Name="FK_Tunnit_Henkilot">
+          <End Type="KoulukantaModel.HENKILOT" Role="HENKILOT" Multiplicity="0..1" />
+          <End Type="KoulukantaModel.TUNNIT" Role="TUNNIT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HENKILOT">
+              <PropertyRef Name="HenkiloID" />
+            </Principal>
+            <Dependent Role="TUNNIT">
+              <PropertyRef Name="HenkiloID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tunnit_Projektit">
+          <End Type="KoulukantaModel.PROJEKTIT" Role="PROJEKTIT" Multiplicity="0..1" />
+          <End Type="KoulukantaModel.TUNNIT" Role="TUNNIT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROJEKTIT">
+              <PropertyRef Name="ProjektiID" />
+            </Principal>
+            <Dependent Role="TUNNIT">
+              <PropertyRef Name="ProjektiID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="Henkilot_bak">
           <Key>
             <PropertyRef Name="Henkilö_ID" />
@@ -150,13 +224,6 @@ warning 6002: The table/view 'Koulukanta.dbo.POSTITOIMIPAIKKA' does not have a p
           <Property Name="Postitoimipaikka1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
-        <EntityContainer Name="KoulukantaEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="HENKILOT" EntityType="Self.HENKILOT" />
-          <EntitySet Name="PROJEKTIT" EntityType="Self.PROJEKTIT" />
-          <EntitySet Name="TUNNIT" EntityType="Self.TUNNIT" />
-          <EntitySet Name="Henkilot_bak" EntityType="Self.Henkilot_bak" />
-          <EntitySet Name="POSTITOIMIPAIKKA" EntityType="Self.POSTITOIMIPAIKKA" />
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -166,56 +233,56 @@ warning 6002: The table/view 'Koulukanta.dbo.POSTITOIMIPAIKKA' does not have a p
           <EntitySetMapping Name="HENKILOT">
             <EntityTypeMapping TypeName="KoulukantaModel.HENKILOT">
               <MappingFragment StoreEntitySet="HENKILOT">
-                <ScalarProperty Name="Etunimi" ColumnName="Etunimi" />
-                <ScalarProperty Name="Sukunimi" ColumnName="Sukunimi" />
-                <ScalarProperty Name="Osoite" ColumnName="Osoite" />
-                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
-                <ScalarProperty Name="Sähköposti" ColumnName="Sähköposti" />
-                <ScalarProperty Name="Puhelin" ColumnName="Puhelin" />
-                <ScalarProperty Name="HenkiloID" ColumnName="HenkiloID" />
                 <ScalarProperty Name="Esimies" ColumnName="Esimies" />
+                <ScalarProperty Name="HenkiloID" ColumnName="HenkiloID" />
+                <ScalarProperty Name="Puhelin" ColumnName="Puhelin" />
+                <ScalarProperty Name="Sähköposti" ColumnName="Sähköposti" />
+                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
+                <ScalarProperty Name="Osoite" ColumnName="Osoite" />
+                <ScalarProperty Name="Sukunimi" ColumnName="Sukunimi" />
+                <ScalarProperty Name="Etunimi" ColumnName="Etunimi" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PROJEKTIT">
             <EntityTypeMapping TypeName="KoulukantaModel.PROJEKTIT">
               <MappingFragment StoreEntitySet="PROJEKTIT">
-                <ScalarProperty Name="ProjektiID" ColumnName="ProjektiID" />
                 <ScalarProperty Name="Nimi" ColumnName="Nimi" />
+                <ScalarProperty Name="ProjektiID" ColumnName="ProjektiID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TUNNIT">
             <EntityTypeMapping TypeName="KoulukantaModel.TUNNIT">
               <MappingFragment StoreEntitySet="TUNNIT">
-                <ScalarProperty Name="TuntiID" ColumnName="TuntiID" />
-                <ScalarProperty Name="ProjektiID" ColumnName="ProjektiID" />
-                <ScalarProperty Name="HenkiloID" ColumnName="HenkiloID" />
+                <ScalarProperty Name="Projektitunnit" ColumnName="Projektitunnit" />
                 <ScalarProperty Name="Pvm" ColumnName="Pvm" />
-                <ScalarProperty Name="Tunnit1" ColumnName="Tunnit" />
+                <ScalarProperty Name="HenkiloID" ColumnName="HenkiloID" />
+                <ScalarProperty Name="ProjektiID" ColumnName="ProjektiID" />
+                <ScalarProperty Name="TuntiID" ColumnName="TuntiID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Henkilot_bak">
             <EntityTypeMapping TypeName="KoulukantaModel.Henkilot_bak">
               <MappingFragment StoreEntitySet="Henkilot_bak">
-                <ScalarProperty Name="Etunimi" ColumnName="Etunimi" />
-                <ScalarProperty Name="Sukunimi" ColumnName="Sukunimi" />
-                <ScalarProperty Name="Osoite" ColumnName="Osoite" />
-                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
-                <ScalarProperty Name="Sähköposti" ColumnName="Sähköposti" />
-                <ScalarProperty Name="Puhelin" ColumnName="Puhelin" />
-                <ScalarProperty Name="Henkilö_ID" ColumnName="Henkilö_ID" />
                 <ScalarProperty Name="Esimies" ColumnName="Esimies" />
+                <ScalarProperty Name="Henkilö_ID" ColumnName="Henkilö_ID" />
+                <ScalarProperty Name="Puhelin" ColumnName="Puhelin" />
+                <ScalarProperty Name="Sähköposti" ColumnName="Sähköposti" />
+                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
+                <ScalarProperty Name="Osoite" ColumnName="Osoite" />
+                <ScalarProperty Name="Sukunimi" ColumnName="Sukunimi" />
+                <ScalarProperty Name="Etunimi" ColumnName="Etunimi" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="POSTITOIMIPAIKKA">
             <EntityTypeMapping TypeName="KoulukantaModel.POSTITOIMIPAIKKA">
               <MappingFragment StoreEntitySet="POSTITOIMIPAIKKA">
-                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
-                <ScalarProperty Name="Postitoimipaikka1" ColumnName="Postitoimipaikka" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Postitoimipaikka1" ColumnName="Postitoimipaikka" />
+                <ScalarProperty Name="Postinumero" ColumnName="Postinumero" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

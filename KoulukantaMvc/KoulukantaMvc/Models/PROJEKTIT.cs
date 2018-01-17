@@ -14,7 +14,16 @@ namespace KoulukantaMvc.Models
     
     public partial class PROJEKTIT
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public PROJEKTIT()
+        {
+            this.TUNNIT = new HashSet<TUNNIT>();
+        }
+    
         public int ProjektiID { get; set; }
         public string Nimi { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TUNNIT> TUNNIT { get; set; }
     }
 }

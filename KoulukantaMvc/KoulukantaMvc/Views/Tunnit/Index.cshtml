@@ -10,7 +10,7 @@
             $.getJSON("/tunnit/getlist", null, function (json) {
                 var tunnit = JSON.parse(json);
 
-
+                
                 var html = "";
                 for (var index = 0; index < tunnit.length; index++) {
                     html += "<tr>" +
@@ -19,7 +19,7 @@
                         "<td>" + tunnit[index].ProjektiID + "</td>" +
                         "<td>" + tunnit[index].HenkiloID + "</td>" +
                         "<td>" + tunnit[index].Pvm + "</td>" +
-                        "<td>" + tunnit[index].Tunnit1 + "</td>" +
+                        "<td>" + tunnit[index].Projektitunnit + "</td>" +
                         "<td><a href='#'><span class='glyphicon glyphicon-trash'></span></a></td>" +
                         "</tr>\r\n";
                 }
@@ -31,8 +31,7 @@
                     console.log("Klikattu kynää");
                     // etsitään henkilön tiedot klikatulta riviltä
                     var tuntiID = $(this).parent().parent().next().text();
-                    alert(tuntiID);
-
+                   
                     // haetaan asiakkaan tiedot id:n perusteella
                     $.getJSON("/tunnit/getsingletunnit/" + tuntiID, null, function (json2) {
                         var tunnit = JSON.parse(json2);
@@ -42,7 +41,7 @@
                         $("#tunnitModal_ProjektiId").val(tunnit.ProjektiID);
                         $("#tunnitModal_HenkiloId").val(tunnit.HenkiloID);
                         $("#tunnitModal_Pvm").val(tunnit.Pvm);
-                        $("#tunnitModal_Tunnit1").val(tunnit.Tunnit1);
+                        $("#tunnitModal_Projektitunnit").val(tunnit.Projektitunnit);
 
                         // näytetään ikkuna
                         $("#tunnitModalTitle").text("Muokkaa tunteja");
@@ -82,7 +81,7 @@
                 $("#tunnitModal_ProjektiId").val("");
                 $("#tunnitModal_HenkiloId").val("");
                 $("#tunnitModal_Pvm").val("");
-                $("#tunnitModal_Tunnit1").val("");
+                $("#tunnitModal_Projektitunnit").val("");
 
                 // näytetään ikkuna
                 $("#tunnitModalTitle").text("Lisää uudet tunnit");
@@ -98,7 +97,7 @@
                     ProjektiID: $("#tunnitModal_ProjektiId").val(),
                     HenkiloID: $("#tunnitModal_HenkiloId").val(),
                     Pvm: $("#tunnitModal_Pvm").val(),
-                    Tunnit: $("#tunnitModal_Tunnit1").val()
+                    Projektitunnit: $("#tunnitModal_Projektitunnit").val()
                 };
 
                 $.post("/tunnit/update/", details, function (status) {
@@ -130,7 +129,7 @@
             <th>Projekti-ID</th>
             <th>Henkilö-ID</th>
             <th>Päivämäärä</th>
-            <th>Tunnit</th>
+            <th>Projektitunnit</th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -162,7 +161,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-3">Tunnit</div>
-                    <div class="col-md-6"><input class="form-control" id="tunnitModal_Tunnit1" type="text"></div>
+                    <div class="col-md-6"><input class="form-control" id="tunnitModal_Projektitunnit" type="text"></div>
                 </div>
             </div>
             <div class="modal-footer">

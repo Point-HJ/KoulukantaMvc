@@ -20,15 +20,17 @@ namespace KoulukantaMvc.Controllers
         public JsonResult GetList()
         {
             KoulukantaEntities entities = new KoulukantaEntities();
-                    
-                var model = (from t in entities.TUNNIT
+
+            CultureInfo fiFI = new CultureInfo("fi-FI");
+
+            var model = (from t in entities.TUNNIT
                              select new
                              {
                                  TuntiID = t.TuntiID,
                                  ProjektiID = t.ProjektiID,
                                  HenkiloID = t.HenkiloID,
-                                 Pvm = t.Pvm,
-                                 Tunnit1 = t.Tunnit1
+                                 Pvm = t.Pvm.Value,
+                                 Projektitunnit = t.Projektitunnit
                              }).ToList();
 
                 string json = JsonConvert.SerializeObject(model);
@@ -57,7 +59,7 @@ namespace KoulukantaMvc.Controllers
                              ProjektiID = t.ProjektiID,
                              HenkiloID = t.HenkiloID,
                              Pvm = t.Pvm,
-                             Tunnit1 = t.Tunnit1
+                             Projektitunnit = t.Projektitunnit
                          }).FirstOrDefault();
 
 
@@ -84,8 +86,8 @@ namespace KoulukantaMvc.Controllers
 
                     ProjektiID = tunn.ProjektiID,
                     HenkiloID = tunn.HenkiloID,
-                    Pvm = tunn.Pvm,
-                    Tunnit1 = tunn.Tunnit1
+                    Pvm = tunn.Pvm.Value,
+                    Projektitunnit = tunn.Projektitunnit
                 };
 
                 // tallennus tietokantaan
@@ -104,11 +106,11 @@ namespace KoulukantaMvc.Controllers
 
                 if (dbItem != null)
                 {
-                    dbItem.TuntiID = tunn.TuntiID;
+                    //dbItem.TuntiID = tunn.TuntiID;
                     dbItem.ProjektiID = tunn.ProjektiID;
                     dbItem.HenkiloID = tunn.HenkiloID;
-                    dbItem.Pvm = tunn.Pvm;
-                    dbItem.Tunnit1 = tunn.Tunnit1;
+                    dbItem.Pvm = tunn.Pvm.Value;
+                    dbItem.Projektitunnit = tunn.Projektitunnit;
 
 
                     // tallennus tietokantaan

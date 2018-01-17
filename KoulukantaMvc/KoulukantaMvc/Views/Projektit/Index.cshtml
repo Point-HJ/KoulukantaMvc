@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<KoulukantaMvc.Models.PROJEKTIT>
 @{
     ViewBag.Title = "Index";
 }
@@ -28,7 +28,7 @@
 
                     // etsitään henkilön tiedot klikatulta riviltä
                     var projektiID = $(this).parent().parent().prev().prev().text();
-                    
+
 
                     // haetaan asiakkaan tiedot id:n perusteella
                     $.getJSON("/projektit/getsingleprojektit/" + projektiID, null, function (json2) {
@@ -44,9 +44,23 @@
                     });
                 });
 
+                // Plus-merkin klikkaus
                 $(".glyphicon-plus-sign").click(function () {
-                    var customerId = $(this).parent().parent().next().text();
-                    alert("Klikattiin: " + customerId);
+                    var projektiId = $(this).parent().parent().next().text();
+                    alert("Klikattiin: " + projektiId);
+
+                    var url = "GetOrderData/" + projektiId;
+                    $.getJSON(url, null, function (data) {
+                        alert("Kutsu onnistui, data = " + data.html);
+
+                        //var id = "#orderDetailsRow-" + projektiId;
+                        //$(id).html(data.html);
+                        //$(id).css("display", "block");
+
+
+                    });
+                    return false;
+
                 })
 
 
@@ -106,13 +120,16 @@
             });
 
 
+            
+
+
             console.log("Alustus valmis!");
         });
 
-       
-           
-       
-           
+
+
+
+
     </script>
 
 }
@@ -128,7 +145,29 @@
             <th>Nimi</th>
         </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+        @*@foreach (KoulukantaMvc.Models.PROJEKTIT pro in Model)
+        {
+            <tr>
+                <td><a href="#" class="displayOrderDataLink" data-projektiId="@pro.ProjektiID"><span class="glyphicon glyphicon-plus-sign"></span></a>@pro.ProjektiID</td>
+                <td>@pro.ProjektiID</td>
+                <td>@pro.Nimi</td>
+            </tr>
+
+            <tr id="orderDetailsRow-@pro.ProjektiID" x-style="visibility: hidden;">
+                <td colspan="5">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>A</td>
+                            <td>B</td>
+                            <td>C</td>
+                        </tr>
+                    </table>
+                </td>
+
+            </tr>
+        }*@
+    </tbody>
 </table>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="projektitModalDialog">
@@ -140,9 +179,9 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                <div class="col-md-3">Projekti-ID</div>
-                <div class="col-md-6"><input class="form-control" id="projektitModal_ProjektiID" type="text"></div>
-               </div>
+                    <div class="col-md-3">Projekti-ID</div>
+                    <div class="col-md-6"><input class="form-control" id="projektitModal_ProjektiID" type="text"></div>
+                </div>
                 <div class="col-md-3">Nimi</div>
                 <div class="col-md-6"><input class="form-control" id="projektitModal_Nimi" type="text"></div>
             </div>

@@ -14,6 +14,12 @@ namespace KoulukantaMvc.Models
     
     public partial class HENKILOT
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public HENKILOT()
+        {
+            this.TUNNIT = new HashSet<TUNNIT>();
+        }
+    
         public string Etunimi { get; set; }
         public string Sukunimi { get; set; }
         public string Osoite { get; set; }
@@ -22,5 +28,8 @@ namespace KoulukantaMvc.Models
         public string Puhelin { get; set; }
         public int HenkiloID { get; set; }
         public Nullable<int> Esimies { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TUNNIT> TUNNIT { get; set; }
     }
 }
